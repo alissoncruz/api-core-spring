@@ -1,0 +1,245 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: GPAJames API Integration
+  description: 'Integration GPA James.'
+  contact:
+    name: Team GPA James
+    email: alisson.cruz@jamesdelivery.com.br
+
+host: conecta.multivarejogpa.com.br
+basePath: /api/james/v1
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  /assortment:
+    post:
+      tags:
+        - Assortment
+      summary: Create an assortment.
+      description: 'Criar sortimento. Roles USER. '
+      operationId: createAssortment
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: assortment
+          description: data of the new Assortment
+          required: true
+          schema:
+            $ref: '#/definitions/Assortment'
+      responses:
+        '200':
+          description: Create new resource
+
+        '401':
+          description: Authorization Failed
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '404':
+          description: Document not found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+      security:
+        - OauthSecurity:
+            - "bearer"
+
+  /assortments:
+    post:
+      tags:
+        - Assortment
+      summary: Create new Array of assortments.
+      description: 'Criar sortimento. Roles USER. '
+      operationId: createAssortments
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: assortment
+          description: data of the new Assortment
+          required: true
+          schema:
+            $ref: '#/definitions/Assortments'
+      responses:
+        '200':
+          description: Create new resource
+
+        '401':
+          description: Authorization Failed
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '404':
+          description: Document not found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+      security:
+        - OauthSecurity:
+            - "bearer"
+
+  /assortment/{code}:
+    get:
+      tags:
+        - Assortment
+      summary: Gets a assortment
+      description: 'get for code of assortment'
+      operationId: getProduct
+      produces:
+        - application/json
+      security:
+        - OauthSecurity:
+            - bearer
+      parameters:
+        - name: code
+          in: path
+          description: Code of assortment
+          required: true
+          type: string
+          x-example: '000001'
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/AssortmentResponse'
+        '401':
+          description: Authorization Failed
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '404':
+          description: Document not found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        default:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+
+securityDefinitions:
+  OauthSecurity:
+    type: oauth2
+    flow: accessCode
+    authorizationUrl: 'https://conecta.multivarejogpa.com.br/security/iam/v1/user-identities/login'
+    tokenUrl: 'https://conecta.multivarejogpa.com.br/security/iam/v1/user-identities/login'
+    scopes:
+      bearer: Client authorization token - Bearer JWT
+security:
+  - OauthSecurity:
+      - bearer
+
+definitions:
+
+  Assortments:
+    type: object
+    description: 'Limit of 50 accept'
+    properties:
+      assortments:
+        type: array
+        items:
+          $ref: '#/definitions/Assortment'
+
+  Assortment:
+    description: Object Assortment
+    type: object
+    required:
+      - product
+    properties:
+      product:
+        type: string
+        example: 1234567
+        description: Unique identifier.
+      codeStore:
+        type: string
+        example: 123456
+        description: Code of Store
+      price:
+        type: number
+        example: 59.90
+        minimum: 0
+        exclusiveMinimum: true
+        description: Total value available for the assortment. 'Valor minimum >= 0'
+      priceCurrent:
+        type: number
+        example: 59.90
+        minimum: 0
+        exclusiveMinimum: true
+        description: Total value available for the assortment. 'Valor minimum >= 0'
+      description:
+        type: string
+        example: Chocolate Boxes
+        description: Description of assortment
+      shortDescription:
+        type: string
+        example: Chocolate Boxes
+        description: Description of assortment
+      stock:
+        type: integer
+        example: 1000
+        description: Quantity in stock
+      codeEAN1:
+        type: string
+        example: 123456
+        description: Unique identifier
+      codeEAN2:
+        type: string
+        example: 123456
+        description: Unique identifier
+      codeEAN3:
+        type: string
+        example: 123456
+        description: Unique identifier
+      section:
+        type: string
+        example: 123456
+        description: Unique identifier
+      codeGroup:
+        type: string
+        example: 123456
+        description: Unique identifier
+      codeSubgroup:
+        type: string
+        example: 123456
+        description: Unique identifier
+
+  AssortmentResponse:
+    type: object
+    properties:
+      assortment:
+        type: array
+        items:
+          $ref: '#/definitions/Assortment'
+
+  ErrorModel:
+    type: object
+    required:
+      - codeBuilderComplete
+      - message
+    properties:
+      code:
+        type: string
+      message:
+        type: string

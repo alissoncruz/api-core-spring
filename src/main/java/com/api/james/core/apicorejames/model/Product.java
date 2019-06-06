@@ -1,5 +1,9 @@
 package com.api.james.core.apicorejames.model;
 
+import com.api.james.core.apicorejames.service.utils.DateTimeToStringConverter;
+import com.api.james.core.apicorejames.service.utils.StringToDatetimeConverter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +24,7 @@ public class Product {
     @Id
     private String id;
 
-    private String name;
+    private String product;
 
     private String description;
 
@@ -30,6 +34,8 @@ public class Product {
 
     private String user;
 
+    @JsonSerialize(converter = DateTimeToStringConverter.class)
+    @JsonDeserialize(converter = StringToDatetimeConverter.class)
     private DateTime date;
 
 

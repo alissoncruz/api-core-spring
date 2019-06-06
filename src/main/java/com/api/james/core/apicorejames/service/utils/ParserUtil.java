@@ -5,14 +5,12 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.Logger;
 
 import java.util.Objects;
 import java.util.TimeZone;
 
 public class ParserUtil {
-    private static final Logger log = ESAPI.getLogger(ParserUtil.class);
+
 
     private ParserUtil() {
     }
@@ -21,7 +19,7 @@ public class ParserUtil {
         try {
             return (new ObjectMapper()).writeValueAsString(objeto);
         } catch (JsonProcessingException var2) {
-            log.error(Logger.EVENT_FAILURE, var2.getMessage(), var2);
+
             throw new IllegalArgumentException(var2);
         }
     }
@@ -41,4 +39,5 @@ public class ParserUtil {
 
         return valueConverted;
     }
+
 }
